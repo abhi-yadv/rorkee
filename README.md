@@ -1,128 +1,64 @@
-# Campus Carbon Footprint Mapper - IIT Roorkee
+# Campus Carbon Footprint Mapper
 
-A comprehensive web application for monitoring, analyzing, and reducing carbon emissions across IIT Roorkee campus.
+A React and TypeScript portfolio prototype for exploring building-level emissions, department comparisons and a simple daily emissions simulation.
 
-## Features
+**Status: learning prototype.** The dashboard uses sample data from `src/lib/mockData.ts`; chat responses are scripted. This repository does not establish an official affiliation with IIT Roorkee, live sensor integration, verified emission reductions or green certifications. Institutional names and locations in the original demo are illustrative.
 
-### 🎯 Dashboard
-- **Overview**: Real-time campus emissions metrics with statistics and top emitters
-- **Simulation**: Live time-based simulation showing emissions throughout the day
-- **Map Analytics**: Interactive campus map with building-level emissions data
+## What works today
 
-### 🏆 Department Rankings
-- Performance comparison across campus departments
-- Sustainability scoring and leaderboards
-- Track improvements and green certifications
+- Dashboard summaries, building filters and department comparisons over sample data.
+- Time-of-day simulation and a map analytics interface.
+- Scripted chat and sample recommendation history.
+- Responsive layouts and nested routes with React Router.
 
-### 💬 Chat
-- AI-powered sustainability assistant
-- **Recommendations History**: Track all sustainability recommendations and implementation status
+The Supabase client and domain interfaces are scaffolding. The current dashboard does not load records from a database. The original team profiles, contact form and project milestones are demo content, not verified people or outcomes.
 
-### ℹ️ About
-- **Project**: Mission, vision, features, and milestones
-- **Team**: Meet the multidisciplinary team
-- **Contact**: Get in touch with office hours and contact form
+## Run locally
 
-## Tech Stack
+Use Node.js 22 LTS and npm.
 
-- **React 18** with TypeScript
-- **React Router v6** for multilevel routing
-- **Framer Motion** for smooth transitions and animations
-- **Tailwind CSS** for styling
-- **Lucide React** for icons
-- **Supabase** for backend (database ready)
-- **Vite** for blazing-fast development
-
-## Architecture
-
-### Routing Structure
-```
-/
-├── dashboard/
-│   ├── overview
-│   ├── simulation
-│   └── map-analytics
-├── rankings
-├── chat/
-│   ├── (index)
-│   └── history
-└── about/
-    ├── (index - project)
-    ├── team
-    └── contact
-```
-
-### Key Components
-
-- **Layout.tsx**: Main application layout with navigation
-- **Navigation.tsx**: Top navigation with mobile drawer
-- **DashboardLayout.tsx**: Nested layout for dashboard tabs
-- **ChatLayout.tsx**: Nested layout for chat sections
-- **AboutLayout.tsx**: Nested layout for about pages
-
-### Transitions
-
-All route transitions use Framer Motion with:
-- Fade in/out animations
-- Smooth tab switching with layoutId
-- Staggered children animations for lists and cards
-
-### Mobile Responsive
-
-- Collapsible navigation on mobile
-- Touch-friendly controls
-- Responsive grid layouts
-- Overflow-x scrolling for tab navigation
-
-## Getting Started
-
-1. Install dependencies:
-```bash
-npm install
-```
-
-2. Set up environment variables in `.env`:
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-3. Run development server:
-```bash
+```sh
+git clone https://github.com/abhi-yadv/rorkee.git
+cd rorkee
+npm ci
 npm run dev
 ```
 
-4. Build for production:
-```bash
+The sample dashboard runs without Supabase. If you extend `src/lib/supabase.ts`, copy `.env.example` to `.env.local` and configure your own development project. Browser-prefixed variables are public; never put a service-role key in them.
+
+The map expects a separately configured Mappls SDK. Without it, use the sample data views; the map is not a live geographic visualization.
+
+## Checks
+
+```sh
+npm run typecheck
+npm run lint
 npm run build
+npm run preview
 ```
 
-## Database Schema
+Output is written to `dist/`. Static hosting must serve `index.html` for application routes such as `/dashboard/overview`.
 
-The application is ready for Supabase integration with schemas for:
-- Buildings (emissions, energy, metadata)
-- Commutes (user transport logging)
-- Scenarios (what-if planning)
-- Chat messages (AI conversations)
-- Recommendations (sustainability suggestions)
+## Structure
 
-## Design System
+```text
+src/components/       Navigation and layouts
+src/lib/mockData.ts    Sample buildings, routes and locations
+src/lib/types.ts       Domain interfaces
+src/pages/Dashboard/   Overview, simulation and map views
+src/pages/Chat/        Scripted chat and sample history
+src/pages/About/       Project information
+```
 
-- **Color Palette**: Neutral grays with emerald green accents
-- **Typography**: System fonts, tracking-tight for headings
-- **Spacing**: 8px baseline grid
-- **Borders**: Subtle white/10 opacity for dark theme
-- **Shadows**: Subtle with backdrop blur for depth
+## Development priorities
 
-## Future Enhancements
+1. Document emission factors, units, assumptions and provenance before importing measured data.
+2. Add tests for totals, filters and simulation boundaries, followed by CI.
+3. Replace sample team/contact content with verified maintainer information.
+4. Add accessible chart descriptions and export the filtered dataset.
+5. Introduce authentication and a validated backend when persistence is needed.
+6. Add screenshots and a short walkthrough that labels sample data.
 
-- MapmyIndia/Mappls integration for live campus map
-- Real-time IoT sensor data integration
-- Advanced analytics with Chart.js
-- User authentication with Supabase Auth
-- Progressive Web App (PWA) support
-- Export functionality (CSV, PDF reports)
+## Ownership and licensing
 
-## License
-
-This project is part of IIT Roorkee's sustainability initiative.
+Maintained by [Abhishek Yadav](https://github.com/abhi-yadv). No open-source license has been added. Confirm ownership and third-party asset rights before choosing one.
