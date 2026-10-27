@@ -49,6 +49,16 @@ Inference uses [Justin Shenk's FER package](https://github.com/justinshenk/fer) 
 
 Do not commit datasets, trained weights, personal images, API keys, or `.env` files. Record dataset licenses and report accuracy only after a reproducible held-out evaluation.
 
+## Verification
+
+```bash
+python -m unittest -v test_app
+python -m py_compile app.py training/train_fer2013.py
+node --check static/app.js
+```
+
+The route tests use a stub predictor to check invalid uploads, annotated JSON responses and no-face handling. They do not measure model accuracy. A real-image inference smoke test is separate from dataset evaluation. Webcam hardware and browser permissions should also be checked on the machine running the app.
+
 ## Tech
 
 Python, Flask, OpenCV, Pillow, NumPy, FER and TensorFlow
