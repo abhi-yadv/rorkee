@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Facial Expression Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <main class="shell">
+      <p class="eyebrow">Computer vision portfolio project</p>
+      <h1>Facial Expression Recognition</h1>
+      <p class="lede">Explore visible facial expressions with a pre-trained FER CNN. Upload an image or capture a webcam frame to see face boxes, expression labels and model confidence.</p>
+      <form action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data">
+        <label for="image">Image file <span>JPG, PNG, or WEBP - up to 5 MB</span></label>
+        <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required>
+        <button type="submit">Analyze image</button>
+      </form>
+      <section aria-labelledby="camera-title">
+        <h2 id="camera-title">Webcam capture</h2>
+        <p>Start the camera, then capture a frame to analyze it. Images are sent only to this app's server. Use your own image or get permission first.</p>
+        <video id="camera" autoplay playsinline muted hidden></video>
+        <div class="camera-actions">
+          <button type="button" id="start-camera">Start camera</button>
+          <button type="button" id="capture" disabled>Capture and analyze</button>
+          <button type="button" id="stop-camera" disabled>Stop camera</button>
+        </div>
+        <p id="camera-status" aria-live="polite"></p>
+        <img id="camera-result" alt="Captured frame with expression predictions" hidden>
+      </section>
+      {% if error %}<p class="message error" role="alert">{{ error }}</p>{% endif %}
+      {% if no_face %}<p class="message">No face was detected. Try a clear, front-facing image with adequate lighting.</p>{% endif %}
+      {% if predictions %}
+      <section class="results" aria-labelledby="result-title">
+        <div>
+          <h2 id="result-title">Result</h2>
+          <img src="{{ image_url }}" alt="Uploaded image with detected-face boxes and expression labels">
+        </div>
+        <ol>
+          {% for prediction in predictions %}
+          <li><strong>{{ prediction.emotion }}</strong><span>{{ '%.0f'|format(prediction.confidence * 100) }}% confidence</span></li>
+          {% endfor %}
+        </ol>
+      </section>
+      {% endif %}
+      <section aria-labelledby="history-title"><h2 id="history-title">Recent predictions</h2><p>Last 10 results in this tab only; images are not saved.</p><ol id="history"></ol></section>
+      <footer>Built with Python, Flask, OpenCV and FER. Model confidence is not calibrated certainty about feelings. This is an educational expression classifier. The repository includes a separate FER-2013 training workflow.</footer>
+      <script id="initial-predictions" type="application/json">{{ (predictions | map(attribute='emotion') | list if predictions else []) | tojson }}</script>
+      <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+    </main>
+  </body>
+</html>

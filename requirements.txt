@@ -1,0 +1,8 @@
+Flask>=3.0,<4.0
+fer==25.10.3
+tensorflow==2.16.2
+opencv-contrib-python==4.10.0.84
+Pillow==10.2.0
+numpy==1.26.4
+moviepy==1.0.3
+setuptools>=70,<81
