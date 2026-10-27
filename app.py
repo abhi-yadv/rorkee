@@ -18,7 +18,7 @@ from flask import Flask, render_template, request
 from PIL import Image
 
 try:
-    from fer import FER
+    from fer.fer import FER
 except ImportError:  # Allows the UI and explanatory error state to load.
     FER = None
 
