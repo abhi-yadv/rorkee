@@ -1,128 +1,54 @@
-# Campus Carbon Footprint Mapper - IIT Roorkee
+# Facial Expression Recognition
 
-A comprehensive web application for monitoring, analyzing, and reducing carbon emissions across IIT Roorkee campus.
+A portfolio project that detects visible faces in an uploaded image and estimates an expression label with the [`fer`](https://pypi.org/project/fer/) package's pre-trained CNN. The UI is built with Flask; face boxes and predicted labels are drawn with OpenCV.
+
+> **Scope and limitations:** This is an experimental educational project, not an emotion-reading system. A model output is not a fact about a person's feelings. Do not use it for healthcare, hiring, education, law enforcement, identity, safety, or other high-impact decisions.
 
 ## Features
 
-### 🎯 Dashboard
-- **Overview**: Real-time campus emissions metrics with statistics and top emitters
-- **Simulation**: Live time-based simulation showing emissions throughout the day
-- **Map Analytics**: Interactive campus map with building-level emissions data
+- Validates JPG, PNG and WEBP uploads (maximum 5 MB)
+- Detects each visible face and shows the top predicted label plus confidence
+- Keeps images in memory for the current request; it does not save uploads
+- Browser webcam start/stop and explicit frame capture for analysis
+- Last 10 predictions kept in tab session storage, with no images saved
+- Includes a separate, local FER-2013 CNN training script
 
-### 🏆 Department Rankings
-- Performance comparison across campus departments
-- Sustainability scoring and leaderboards
-- Track improvements and green certifications
+## Run locally
 
-### 💬 Chat
-- AI-powered sustainability assistant
-- **Recommendations History**: Track all sustainability recommendations and implementation status
+Use Python 3.11 or 3.12. Initial installation downloads TensorFlow and FER's dependencies and can take several minutes.
 
-### ℹ️ About
-- **Project**: Mission, vision, features, and milestones
-- **Team**: Meet the multidisciplinary team
-- **Contact**: Get in touch with office hours and contact form
-
-## Tech Stack
-
-- **React 18** with TypeScript
-- **React Router v6** for multilevel routing
-- **Framer Motion** for smooth transitions and animations
-- **Tailwind CSS** for styling
-- **Lucide React** for icons
-- **Supabase** for backend (database ready)
-- **Vite** for blazing-fast development
-
-## Architecture
-
-### Routing Structure
-```
-/
-├── dashboard/
-│   ├── overview
-│   ├── simulation
-│   └── map-analytics
-├── rankings
-├── chat/
-│   ├── (index)
-│   └── history
-└── about/
-    ├── (index - project)
-    ├── team
-    └── contact
-```
-
-### Key Components
-
-- **Layout.tsx**: Main application layout with navigation
-- **Navigation.tsx**: Top navigation with mobile drawer
-- **DashboardLayout.tsx**: Nested layout for dashboard tabs
-- **ChatLayout.tsx**: Nested layout for chat sections
-- **AboutLayout.tsx**: Nested layout for about pages
-
-### Transitions
-
-All route transitions use Framer Motion with:
-- Fade in/out animations
-- Smooth tab switching with layoutId
-- Staggered children animations for lists and cards
-
-### Mobile Responsive
-
-- Collapsible navigation on mobile
-- Touch-friendly controls
-- Responsive grid layouts
-- Overflow-x scrolling for tab navigation
-
-## Getting Started
-
-1. Install dependencies:
 ```bash
-npm install
+python -m venv .venv
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python app.py
 ```
 
-2. Set up environment variables in `.env`:
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+Open `http://127.0.0.1:5000`.
 
-3. Run development server:
+## Training workflow
+
+`training/train_fer2013.py` expects a locally obtained, appropriately licensed FER-2013-style folder layout described in its module docstring. It does not download or commit a dataset. With the dependencies installed, run:
+
 ```bash
-npm run dev
+python training/train_fer2013.py
 ```
 
-4. Build for production:
-```bash
-npm run build
-```
+Use separate `train`, `validation` and `test` folders. Early stopping uses validation only; the test split is evaluated once after training. The script saves the label order and measured test metrics alongside the model. No training accuracy is claimed in this repository.
 
-## Database Schema
+The training workflow is separate from the web demo. Its saved model is not automatically used by the `fer` package; integrating a custom model should include held-out evaluation, per-class metrics and documented preprocessing.
 
-The application is ready for Supabase integration with schemas for:
-- Buildings (emissions, energy, metadata)
-- Commutes (user transport logging)
-- Scenarios (what-if planning)
-- Chat messages (AI conversations)
-- Recommendations (sustainability suggestions)
+Webcam capture requires localhost or HTTPS and explicit browser permission. Run this app locally; the previous Vercel carbon-dashboard deployment does not serve this Python application.
 
-## Design System
+## Attribution
 
-- **Color Palette**: Neutral grays with emerald green accents
-- **Typography**: System fonts, tracking-tight for headings
-- **Spacing**: 8px baseline grid
-- **Borders**: Subtle white/10 opacity for dark theme
-- **Shadows**: Subtle with backdrop blur for depth
+Inference uses [Justin Shenk's FER package](https://github.com/justinshenk/fer) and its bundled pre-trained model. This application adds a Flask interface, upload validation, image annotations and browser webcam capture; it does not claim authorship of the pre-trained model.
 
-## Future Enhancements
+## Repository hygiene
 
-- MapmyIndia/Mappls integration for live campus map
-- Real-time IoT sensor data integration
-- Advanced analytics with Chart.js
-- User authentication with Supabase Auth
-- Progressive Web App (PWA) support
-- Export functionality (CSV, PDF reports)
+Do not commit datasets, trained weights, personal images, API keys, or `.env` files. Record dataset licenses and report accuracy only after a reproducible held-out evaluation.
 
-## License
+## Tech
 
-This project is part of IIT Roorkee's sustainability initiative.
+Python, Flask, OpenCV, Pillow, NumPy, FER and TensorFlow
